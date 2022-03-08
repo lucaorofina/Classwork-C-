@@ -1,78 +1,43 @@
-#include<iostream>
-#include<cmath>
+#include <iostream>
+#include <cmath>
 using namespace std;
-bool okay(int q[8][8]){ // Initialize the board to 0
-    //find where the queens and runs tests
-    for(int c=7;c>0;c--){
-        int r=0;
-        //finds queens
-        while (q[r][c]!=1){
-            r++;
-        }
-        //row test
-        for(int i=1;i<=c;i++){
-            if(q[r][c-i]==1)return false;
-        }
-        //up diagonal test
-        for(int i=1;(r-i)>=0&&(c-i)>=0;i++){
-            if(q[r-i][c-i]==1)return false;
-        }
-        //down diagonal test
-        for(int i=1; (r+i)<8 && (c-i)>=0;i++){
-            if(q[r+i][c-i]==1)return false;
-        }
-    }
-    return true;
+
+
+bool okay(int q[], int c) {
+   for(int i =0; i < c; i++) //each i from 0 to c-1
+      if (q[i] == q[c] || abs(c-i) == abs(q[c]-q[i]))
+          //bc theres a queen on row, we cant put another on this row, we need to go to next row loop
+         return false;
+   return true;
 }
-void print(int q[8][8]){
-    static int sol_num=0;
-    sol_num++;
-    cout<<"solution #"<<sol_num<<":"<<endl;
-    for(int r=0;r<8;r++){ //for loop to move along row
-        for(int c=0;c<8;c++){ //for loop to move along col
-            cout<<q[r][c] <<" ";
-        }
-        cout<<endl;
-    }
-    cout<<endl;
+void print(int q[]) {
+   static int sol_num = 0;
+   cout << "Solution # " << ++sol_num << ": ";
+  for(int i = 0; i < 8; i++) //for loop to match array with board
+    cout << q[i]; //current array showing which column has queen (1)
+     cout << "\n";
 }
-int main(){
-     int q[8][8]={0}; //array initializes to 0
-        for(int i0=0;i0<8;i0++){
-            for(int i1=0;i1<8;i1++){
-                for(int i2=0;i2<8;i2++){
-                    for(int i3=0;i3<8;i3++){
-                        for(int i4=0;i4<8;i4++){
-                            for(int i5=0;i5<8;i5++){
-                                for(int i6=0;i6<8;i6++){
-                                     for(int i7=0;i7<8;i7++){
-                                             q[i0][0]=1;
-                                             q[i1][1]=1;
-                                             q[i2][2]=1;
-                                             q[i3][3]=1;
-                                             q[i4][4]=1;
-                                             q[i5][5]=1;
-                                             q[i6][6]=1;
-                                             q[i7][7]=1;
-                                             if(okay(q)){
-                                                print(q);
-                                             }
-                                             q[i0][0]=0;
-                                             q[i1][1]=0;
-                                             q[i2][2]=0;
-                                             q[i3][3]=0;
-                                             q[i4][4]=0;
-                                             q[i5][5]=0;
-                                             q[i6][6]=0;
-                                             q[i7][7]=0;
-                                     }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-                                            
-        }
-    return 0;
+int main() {
+   int q[8] = {}; //array initializes to 0
+   int c = 0; //first row first col
+
+    while (c >= 0) {
+      c++;
+      if(c == 8){ //if we pass last column (7 is last) then print
+         print(q);
+         c--; //backtrack
+      }
+     
+      else
+        q[c] = -1; //else move to one before the first row (restarts)
+     
+        while (c >= 0) {
+         q[c]++; //move to the next row
+         if(q[c] == 8) c--; //if we reach last column (or pass col 7), then it backtracks
+         else if(okay(q, c)) //else ok method is called  to see if the queen in column c (true or false)
+             //tru = restarts loop
+          break;
+      }
+   }
+   return 0;
 }
